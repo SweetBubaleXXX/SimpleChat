@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic&display=swap');
+
 $background-color: #fff;
 $text-color: #111;
 $shadow-color: #11111199;
@@ -13,6 +15,7 @@ html {
     height: 100%;
     padding: 0;
     margin: 0;
+    font-family: 'Zen Maru Gothic', sans-serif;
     background: $background-color;
 }
 
@@ -29,19 +32,38 @@ html {
     border-radius: 15px;
     border: 2px $text-color solid;
     @extend %block-shadow;
-    // overflow-y: scroll;
+}
+
+.message-container {
+    overflow-y: auto;
+    scrollbar-width: thin;
+}
+
+.message {
+    max-width: 69%;
+    width: fit-content;
+    margin: 20px 0;
+    padding: 15px;
+    border-radius: 10px;
+    background: #e4e4e4;
 }
 
 .input-container {
     display: flex;
-}
 
-.message-input {
-    $font-size: 16px;
+    .message-input {
+        $font-size: 16px;
 
-    width: 100%;
-    padding: 6px;
-    font-size: $font-size;
-    resize: none;
-    overflow-y: auto;
+        width: 100%;
+        padding: 6px;
+        font-size: $font-size;
+        border-radius: 7px;
+        resize: none;
+        overflow-y: auto;
+        scrollbar-width: none;
+    }
+
+    .send-button {
+        margin-left: 10px;
+    }
 }
