@@ -1,8 +1,11 @@
-@import url('https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;500&display=swap');
 
 $background-color: #fff;
 $text-color: #111;
+$message-background: #e4e4e4;
 $shadow-color: #11111199;
+
+$font: 'Nunito', sans-serif;
 
 %block-shadow {
     box-shadow: 0 2px 10px $shadow-color, inset 0 0 4px $shadow-color;
@@ -15,7 +18,8 @@ html {
     height: 100%;
     padding: 0;
     margin: 0;
-    font-family: 'Zen Maru Gothic', sans-serif;
+    font-family: $font;
+    font-weight: 300;
     background: $background-color;
 }
 
@@ -35,6 +39,8 @@ html {
 }
 
 .message-container {
+    display: flex;
+    flex-direction: column;
     overflow-y: auto;
     scrollbar-width: thin;
 }
@@ -42,13 +48,20 @@ html {
 .message {
     max-width: 69%;
     width: fit-content;
-    margin: 20px 0;
+    margin: 10px 0;
     padding: 15px;
     border-radius: 10px;
-    background: #e4e4e4;
+    background: $message-background;
+    white-space: pre-wrap;
 }
 
-.input-container {
+.message.self {
+    align-self: flex-end;
+    color: $background-color;
+    background: $text-color;
+}
+
+.input-container form {
     display: flex;
 
     .message-input {
@@ -58,6 +71,7 @@ html {
         padding: 6px;
         font-size: $font-size;
         border-radius: 7px;
+        font-family: $font;
         resize: none;
         overflow-y: auto;
         scrollbar-width: none;

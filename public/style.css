@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;500&display=swap");
 .frame {
   box-shadow: 0 2px 10px #11111199, inset 0 0 4px #11111199;
 }
@@ -10,7 +10,8 @@ html {
   height: 100%;
   padding: 0;
   margin: 0;
-  font-family: "Zen Maru Gothic", sans-serif;
+  font-family: "Nunito", sans-serif;
+  font-weight: 300;
   background: #fff;
 }
 
@@ -29,6 +30,8 @@ html {
 }
 
 .message-container {
+  display: flex;
+  flex-direction: column;
   overflow-y: auto;
   scrollbar-width: thin;
 }
@@ -36,25 +39,33 @@ html {
 .message {
   max-width: 69%;
   width: fit-content;
-  margin: 20px 0;
+  margin: 10px 0;
   padding: 15px;
   border-radius: 10px;
   background: #e4e4e4;
+  white-space: pre-wrap;
 }
 
-.input-container {
+.message.self {
+  align-self: flex-end;
+  color: #fff;
+  background: #111;
+}
+
+.input-container form {
   display: flex;
 }
-.input-container .message-input {
+.input-container form .message-input {
   width: 100%;
   padding: 6px;
   font-size: 16px;
   border-radius: 7px;
+  font-family: "Nunito", sans-serif;
   resize: none;
   overflow-y: auto;
   scrollbar-width: none;
 }
-.input-container .send-button {
+.input-container form .send-button {
   margin-left: 10px;
 }
 
