@@ -15,6 +15,12 @@ const messageInput = form.elements.input;
 form.addEventListener("submit", sendMessage);
 messageInput.onkeyup = detectCtrlEnter;
 
+document.addEventListener("DOMContentLoaded", () => {
+    while (!USERNAME) {
+        USERNAME = prompt("Pick username");
+    }
+});
+
 function sendMessage(e) {
     e.preventDefault();
 
@@ -34,14 +40,8 @@ function sendMessage(e) {
 
 function appendMessage(message, self = false) {
     if (self || USERNAME !== message.sender) {
-        let messageElem = document.createElement("div");
-        messageElem.innerHTML = message.text;
-        messageElem.className = "message";
-        if (self) {
-            messageElem.classList.add("self")
-        }
         scroll = createScroller(self);
-        messageContainer.append(messageElem);
+        messageContainer.append(new MessageNode(message, self));
         scroll();
     }
 }
@@ -50,7 +50,7 @@ function createScroller(self) {
     let scrlTop = Math.ceil(messageContainer.scrollTop);
     let height = messageContainer.clientHeight;
     let scrlHeight = messageContainer.scrollHeight;
-    if (scrlHeight === scrlTop + height || self) {
+    if (scrlHeight <= scrlTop + height || self) {
         var shouldScroll = true;
     }
 
@@ -67,8 +67,35 @@ function detectCtrlEnter(e) {
     }
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-    while (!USERNAME) {
-        USERNAME = prompt("Pick username");
+class MessageNode {
+    constructor(messageObj, self) {
+        this.username = messageObj.sender;
+        this.message = messageObj.text;
+        this.time = messageObj.time;
+        this.self = self;
+        return this.build();
     }
-});
+
+    build() {
+        let messageBox = this.createBox();
+        this.self && messageBox.append(this.createSpan("username"));
+        ["message", "time"].forEach((elem) => {
+            messageBox.append(this.createSpan(elem));
+        });
+        return messageBox;
+    }
+
+    createBox() {
+        let elem = document.createElement("div");
+        elem.className = "message";
+        this.self && elem.classList.add("self");
+        return elem;
+    }
+
+    createSpan(name) {
+        let span = document.createElement("span");
+        span.className = name;
+        span.innerHTML = this[name];
+        return span;
+    }
+}

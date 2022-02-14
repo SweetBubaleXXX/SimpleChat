@@ -1,11 +1,14 @@
-@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;500&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;500&display=swap");
 
 $background-color: #fff;
 $text-color: #111;
 $message-background: #e4e4e4;
 $shadow-color: #11111199;
 
-$font: 'Nunito', sans-serif;
+$font: "Nunito", sans-serif;
+
+$outer-message-margin: 20px;
+$message-margin: 10px 0;
 
 %block-shadow {
     box-shadow: 0 2px 10px $shadow-color, inset 0 0 4px $shadow-color;
@@ -24,6 +27,9 @@ html {
 }
 
 .frame {
+    $spacing-vert: 15%;
+    $spacing-horiz: 25%;
+
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
@@ -36,6 +42,23 @@ html {
     border-radius: 15px;
     border: 2px $text-color solid;
     @extend %block-shadow;
+
+    @media screen {
+        @media (max-height: 650px), (max-width: 900px) {
+            top: 10%;
+            bottom: 10%;
+            left: 10%;
+            right: 10%;
+        }
+        @media (max-height: 450px), (max-width: 450px) {
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            border: none;
+            border-radius: 0;
+        }
+    }
 }
 
 .message-container {
@@ -48,11 +71,18 @@ html {
 .message {
     max-width: 69%;
     width: fit-content;
-    margin: 10px 0;
+    margin: $message-margin;
     padding: 15px;
     border-radius: 10px;
     background: $message-background;
     white-space: pre-wrap;
+
+    &:first-child {
+        margin-top: $outer-message-margin;
+    }
+    &:last-child {
+        margin-bottom: $outer-message-margin;
+    }
 }
 
 .message.self {
@@ -62,7 +92,11 @@ html {
 }
 
 .input-container form {
+    $row-height: 36px;
+    $border-radius: 7px;
+
     display: flex;
+    padding-top: 5px;
 
     .message-input {
         $font-size: 16px;
@@ -70,7 +104,7 @@ html {
         width: 100%;
         padding: 6px;
         font-size: $font-size;
-        border-radius: 7px;
+        border-radius: $border-radius;
         font-family: $font;
         resize: none;
         overflow-y: auto;
@@ -78,6 +112,22 @@ html {
     }
 
     .send-button {
+        display: block;
+        width: $row-height;
+        height: $row-height;
+        padding: 1px;
         margin-left: 10px;
+        border-radius: $border-radius;
+        border: 1px $background-color solid;
+        background: none;
+
+        &:hover {
+            border-color: $text-color;
+        }
+
+        img {
+            width: 100%;
+            height: 100%;
+        }
     }
 }
