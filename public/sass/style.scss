@@ -72,18 +72,20 @@ html {
 
 .message {
     $spacing-vert: 20px;
-    $spacing-horiz: 10px;
+    $spacing-horiz: 8px;
     $abs-padding: 4px;
 
     position: relative;
     max-width: 69%;
     width: fit-content;
+    min-width: 65px;
     margin: $message-margin;
     padding: $spacing-vert $spacing-horiz;
     border-radius: 10px;
     font-size: $message-font-size;
     background: $message-background;
     white-space: pre-wrap;
+    word-wrap: break-word;
 
     &:first-child {
         margin-top: $outer-message-margin;

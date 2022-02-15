@@ -58,12 +58,14 @@ html {
   position: relative;
   max-width: 69%;
   width: fit-content;
+  min-width: 65px;
   margin: 10px 0;
-  padding: 20px 10px;
+  padding: 20px 8px;
   border-radius: 10px;
   font-size: 16px;
   background: #e4e4e4;
   white-space: pre-wrap;
+  word-wrap: break-word;
 }
 .message:first-child {
   margin-top: 20px;
@@ -73,8 +75,8 @@ html {
 }
 .message .username, .message .time {
   position: absolute;
-  left: 10px;
-  right: 10px;
+  left: 8px;
+  right: 8px;
   line-height: 16px;
   height: 16px;
   font-size: 12px;

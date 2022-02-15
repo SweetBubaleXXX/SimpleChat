@@ -1,12 +1,5 @@
 const socket = io();
 
-socket.on("connect", () => {
-    console.log("You're connected");
-});
-
-socket.on("message", appendMessage);
-
-
 let USERNAME;
 const form = document.forms.inputForm;
 const messageContainer = document.querySelector(".message-container");
@@ -16,16 +9,30 @@ form.addEventListener("submit", sendMessage);
 messageInput.onkeyup = detectCtrlEnter;
 
 document.addEventListener("DOMContentLoaded", () => {
-    while (!USERNAME) {
-        USERNAME = prompt("Pick username");
+    let pickedName;
+    while (isEmptyFilled(pickedName)) {
+        pickedName = promptUsername();
     }
 });
+
+function isEmptyFilled(string) {
+    let pattern = /^\s*$/;
+    return !string || pattern.test(string);
+}
+
+function promptUsername() {
+    let name = prompt("Pick username");
+    name && socket.emit("add user", {
+        name: name
+    });
+    return name;
+}
 
 function sendMessage(e) {
     e.preventDefault();
 
     let text = messageInput.value;
-    if (text) {
+    if (!isEmptyFilled(text)) {
         let date = Date.now();
         message = {
             sender: USERNAME,
@@ -72,7 +79,7 @@ class MessageNode {
         this.username = messageObj.sender;
         this.messageBody = messageObj.text;
         let date = new Date(messageObj.time);
-        this.time = `${date.getHours()}:${date.getMinutes()}`;
+        this.time = `${('0' + date.getHours()).slice(-2)}:${('0' + date.getMinutes()).slice(-2)}`;
         this.self = self;
         return this.build();
     }
@@ -97,6 +104,19 @@ class MessageNode {
         let span = document.createElement("span");
         span.className = name;
         span.innerHTML = this[name];
+        name === "username" && (span.title = this[name]);
         return span;
     }
 }
+
+
+socket.on("connect", () => {
+    console.log("You're connected");
+});
+
+socket.on("successfully added", userObj => {
+    localStorage = Object.assign(localStorage, userObj)
+    USERNAME = userObj.name;
+});
+
+socket.on("message", appendMessage);
