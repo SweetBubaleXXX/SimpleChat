@@ -55,11 +55,13 @@ html {
 }
 
 .message {
+  position: relative;
   max-width: 69%;
   width: fit-content;
   margin: 10px 0;
-  padding: 15px;
+  padding: 20px 10px;
   border-radius: 10px;
+  font-size: 16px;
   background: #e4e4e4;
   white-space: pre-wrap;
 }
@@ -68,6 +70,26 @@ html {
 }
 .message:last-child {
   margin-bottom: 20px;
+}
+.message .username, .message .time {
+  position: absolute;
+  left: 10px;
+  right: 10px;
+  line-height: 16px;
+  height: 16px;
+  font-size: 12px;
+  font-weight: 400;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: #666666;
+}
+.message .username {
+  top: 4px;
+}
+.message .time {
+  bottom: 4px;
+  text-align: end;
 }
 
 .message.self {

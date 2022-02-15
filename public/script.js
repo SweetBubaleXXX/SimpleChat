@@ -70,16 +70,17 @@ function detectCtrlEnter(e) {
 class MessageNode {
     constructor(messageObj, self) {
         this.username = messageObj.sender;
-        this.message = messageObj.text;
-        this.time = messageObj.time;
+        this.messageBody = messageObj.text;
+        let date = new Date(messageObj.time);
+        this.time = `${date.getHours()}:${date.getMinutes()}`;
         this.self = self;
         return this.build();
     }
 
     build() {
         let messageBox = this.createBox();
-        this.self && messageBox.append(this.createSpan("username"));
-        ["message", "time"].forEach((elem) => {
+        !this.self && messageBox.append(this.createSpan("username"));
+        ["messageBody", "time"].forEach((elem) => {
             messageBox.append(this.createSpan(elem));
         });
         return messageBox;

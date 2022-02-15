@@ -1,11 +1,13 @@
 @import url("https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;500&display=swap");
 
 $background-color: #fff;
-$text-color: #111;
+$primary-color: #111;
+$soft-primary-color: #666666;
 $message-background: #e4e4e4;
 $shadow-color: #11111199;
 
 $font: "Nunito", sans-serif;
+$message-font-size: 16px;
 
 $outer-message-margin: 20px;
 $message-margin: 10px 0;
@@ -40,7 +42,7 @@ html {
     right: 25%;
     padding: 10px;
     border-radius: 15px;
-    border: 2px $text-color solid;
+    border: 2px $primary-color solid;
     @extend %block-shadow;
 
     @media screen {
@@ -69,11 +71,17 @@ html {
 }
 
 .message {
+    $spacing-vert: 20px;
+    $spacing-horiz: 10px;
+    $abs-padding: 4px;
+
+    position: relative;
     max-width: 69%;
     width: fit-content;
     margin: $message-margin;
-    padding: 15px;
+    padding: $spacing-vert $spacing-horiz;
     border-radius: 10px;
+    font-size: $message-font-size;
     background: $message-background;
     white-space: pre-wrap;
 
@@ -83,12 +91,35 @@ html {
     &:last-child {
         margin-bottom: $outer-message-margin;
     }
+
+    .username, .time {
+        position: absolute;
+        left: $spacing-horiz;
+        right: $spacing-horiz;
+        line-height: $spacing-vert - $abs-padding;
+        height: $spacing-vert - $abs-padding;
+        font-size: $spacing-vert - 2 * $abs-padding;
+        font-weight: 400;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        color: $soft-primary-color;
+    }
+
+    .username {
+        top: $abs-padding;
+    }
+
+    .time {
+        bottom: $abs-padding;
+        text-align: end;
+    }
 }
 
 .message.self {
     align-self: flex-end;
     color: $background-color;
-    background: $text-color;
+    background: $primary-color;
 }
 
 .input-container form {
@@ -122,7 +153,7 @@ html {
         background: none;
 
         &:hover {
-            border-color: $text-color;
+            border-color: $primary-color;
         }
 
         img {
