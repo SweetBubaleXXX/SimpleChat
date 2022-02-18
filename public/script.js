@@ -1,31 +1,55 @@
 const socket = io();
 
 let USERNAME;
+let ID;
 const form = document.forms.inputForm;
 const messageContainer = document.querySelector(".message-container");
 const messageInput = form.elements.input;
+const messageList = new Array;
 
 form.addEventListener("submit", sendMessage);
 messageInput.onkeyup = detectCtrlEnter;
 
 document.addEventListener("DOMContentLoaded", () => {
-    let pickedName;
-    while (isEmptyFilled(pickedName)) {
-        pickedName = promptUsername();
-    }
+    reconnectFromStorage();
 });
+
+messageList.new = function (message) {
+
+}
 
 function isEmptyFilled(string) {
     let pattern = /^\s*$/;
     return !string || pattern.test(string);
 }
 
-function promptUsername() {
-    let name = prompt("Pick username");
-    name && socket.emit("add user", {
+function reconnectFromStorage() {
+    let username = sessionStorage.name;
+    let id = sessionStorage.userId;
+    if (id && username) {
+        socket.emit("add user", {
+            userId: id,
+            name: username
+        });
+    }
+    else {
+        connectByUsername();
+    }
+}
+
+function connectByUsername() {
+    let name = getUsername();
+    socket.emit("add user", {
         name: name
     });
-    return name;
+}
+
+function getUsername() {
+    let pickedName;
+    while (isEmptyFilled(pickedName)) {
+        pickedName = prompt("Pick username");
+    }
+    return pickedName;
 }
 
 function sendMessage(e) {
@@ -36,6 +60,8 @@ function sendMessage(e) {
         let date = Date.now();
         message = {
             sender: USERNAME,
+            senderId: ID,
+            id: `${ID}:${date}`,
             text: text,
             time: date
         }
@@ -75,9 +101,10 @@ function detectCtrlEnter(e) {
 }
 
 class MessageNode {
-    constructor(messageObj, self) {
+    constructor(messageObj, self = false) {
         this.username = messageObj.sender;
         this.messageBody = messageObj.text;
+        this.id = messageObj.time;
         let date = new Date(messageObj.time);
         this.time = `${('0' + date.getHours()).slice(-2)}:${('0' + date.getMinutes()).slice(-2)}`;
         this.self = self;
@@ -95,6 +122,7 @@ class MessageNode {
 
     createBox() {
         let elem = document.createElement("div");
+        elem.id = this.id;
         elem.className = "message";
         this.self && elem.classList.add("self");
         return elem;
@@ -115,8 +143,15 @@ socket.on("connect", () => {
 });
 
 socket.on("successfully added", userObj => {
-    localStorage = Object.assign(localStorage, userObj)
+    sessionStorage = Object.assign(sessionStorage, userObj)
     USERNAME = userObj.name;
+    ID = userObj.userId;
+    console.log(`Username: ${USERNAME}\nId: ${ID}`);
+});
+
+socket.on("can't add user", message => {
+    message && alert(message);
+    connectByUsername();
 });
 
 socket.on("message", appendMessage);
