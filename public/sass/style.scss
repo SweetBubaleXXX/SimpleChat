@@ -1,16 +1,6 @@
 @import url("https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;500&display=swap");
-
-$background-color: #fff;
-$primary-color: #111;
-$soft-primary-color: #666666;
-$message-background: #e4e4e4;
-$shadow-color: #11111199;
-
-$font: "Nunito", sans-serif;
-$message-font-size: 16px;
-
-$outer-message-margin: 20px;
-$message-margin: 10px 0;
+@import "variables";
+@import "scrollbar";
 
 %block-shadow {
     box-shadow: 0 2px 10px $shadow-color, inset 0 0 4px $shadow-color;
@@ -37,7 +27,7 @@ html {
     bottom: 13%;
     left: 25%;
     right: 25%;
-    padding: 10px;
+    padding: $frame-padding;
     border-radius: 15px;
     border: 2px $primary-color solid;
     @extend %block-shadow;
@@ -54,6 +44,7 @@ html {
             bottom: 0;
             left: 0;
             right: 0;
+            padding-top: 0;
             border: none;
             border-radius: 0;
         }
@@ -63,6 +54,7 @@ html {
 .message-container {
     display: flex;
     flex-direction: column;
+    position: relative;
     overflow-y: auto;
     scrollbar-width: thin;
 }
@@ -91,7 +83,8 @@ html {
         margin-bottom: $outer-message-margin;
     }
 
-    .username, .time {
+    .username,
+    .time {
         position: absolute;
         left: $spacing-horiz;
         right: $spacing-horiz;
@@ -161,14 +154,3 @@ html {
         }
     }
 }
-
-
-// ::-webkit-scrollbar {
-//     width: 7px;
-// }
-
-// ::-webkit-scrollbar-thumb {
-//     background: #aaa;
-//     width: 5px;
-//     border-radius: 3px;
-// }

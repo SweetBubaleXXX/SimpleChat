@@ -5,7 +5,7 @@ let ID;
 const form = document.forms.inputForm;
 const messageContainer = document.querySelector(".message-container");
 const messageInput = form.elements.input;
-const messageList = new Array;
+const messageList = new Array();
 
 form.addEventListener("submit", sendMessage);
 messageInput.onkeyup = detectCtrlEnter;
@@ -13,6 +13,9 @@ messageInput.onkeyup = detectCtrlEnter;
 document.addEventListener("DOMContentLoaded", () => {
     reconnectFromStorage();
 });
+
+document.documentElement.setAttribute('class',
+    'ontouchend' in document ? 'touch' : 'no-touch');
 
 messageList.new = function (message) {
 

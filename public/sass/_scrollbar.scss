@@ -1,0 +1,28 @@
+@import 'variables';
+
+$scrollbar-color: #a4a4a4;
+$scrollbar-hover-color: #888;
+
+.no-touch .message-container {
+    margin-right: - $frame-padding;
+    overflow-y: scroll;
+
+    &::-webkit-scrollbar {
+        width: $frame-padding;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        $border-padding: ($frame-padding - 3px) / 2 rgba(0, 0, 0, 0) solid;
+
+        border-radius: 3px;
+        border-right: $border-padding;
+        border-left: $border-padding;
+        background: $scrollbar-color;
+        background-clip: padding-box;
+    }
+
+    &::-webkit-scrollbar-thumb:hover {
+        background: $scrollbar-hover-color;
+        background-clip: padding-box;
+    }
+}
