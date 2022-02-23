@@ -4,8 +4,41 @@ let USERNAME;
 let ID;
 const form = document.forms.inputForm;
 const messageContainer = document.querySelector(".message-container");
-const messageInput = form.elements.input;
-const messageList = new Array();
+let messageInput = form.elements.input;
+
+const messageList = {
+    list: new Array(),
+
+    new(message) {
+        let newNode = new MessageNode(message);
+
+        this.list = this.list.filter(node => {
+            return node.id !== newNode.id || (() => {
+                messageContainer.removeChild(node);
+                return false;
+            })()
+        });
+
+        // let duplicate = this.list.find(node => node.id === newNode.id);
+        // if (duplicate) {
+        //     messageContainer.removeChild(duplicate);
+        //     this.list = this.list.filter(elem => elem !== duplicate)
+        // }
+
+        if (!this.list.length) {
+            messageContainer.append(newNode);
+            return this.list.push(newNode);
+        }
+
+        this.list.find((node, index) => {
+            if (node.timeMs < newNode.timeMs) {
+                node.after(newNode);
+                this.list.splice(index, 0, newNode);
+                return true;
+            }
+        });
+    }
+}
 
 form.addEventListener("submit", sendMessage);
 messageInput.onkeyup = detectCtrlEnter;
@@ -16,10 +49,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
 document.documentElement.setAttribute('class',
     'ontouchend' in document ? 'touch' : 'no-touch');
-
-messageList.new = function (message) {
-
-}
 
 function isEmptyFilled(string) {
     let pattern = /^\s*$/;
@@ -64,7 +93,6 @@ function sendMessage(e) {
         message = {
             sender: USERNAME,
             senderId: ID,
-            id: `${ID}:${date}`,
             text: text,
             time: date
         }
@@ -75,20 +103,16 @@ function sendMessage(e) {
 }
 
 function appendMessage(message, self = false) {
-    if (self || USERNAME !== message.sender) {
-        scroll = createScroller(self);
-        messageContainer.append(new MessageNode(message, self));
-        scroll();
-    }
+    scroll = createScroller(self);
+    messageList.new(message);
+    scroll();
 }
 
 function createScroller(self) {
     let scrlTop = Math.ceil(messageContainer.scrollTop);
     let height = messageContainer.clientHeight;
     let scrlHeight = messageContainer.scrollHeight;
-    if (scrlHeight <= scrlTop + height || self) {
-        var shouldScroll = true;
-    }
+    var shouldScroll = self || scrlHeight <= scrlTop + height;
 
     return function () {
         if (shouldScroll) {
@@ -103,39 +127,41 @@ function detectCtrlEnter(e) {
     }
 }
 
+
 class MessageNode {
-    constructor(messageObj, self = false) {
-        this.username = messageObj.sender;
-        this.messageBody = messageObj.text;
-        this.id = messageObj.time;
-        let date = new Date(messageObj.time);
-        this.time = `${('0' + date.getHours()).slice(-2)}:${('0' + date.getMinutes()).slice(-2)}`;
-        this.self = self;
-        return this.build();
-    }
-
-    build() {
-        let messageBox = this.createBox();
-        !this.self && messageBox.append(this.createSpan("username"));
+    constructor(messageObj) {
+        this.box = this.createBox(messageObj);
+        if (!this.box.self) {
+            this.box.append(this.createSpan("username"));
+        }
         ["messageBody", "time"].forEach((elem) => {
-            messageBox.append(this.createSpan(elem));
+            this.box.append(this.createSpan(elem));
         });
-        return messageBox;
+        return this.box;
     }
 
-    createBox() {
+    createBox(messageObj) {
         let elem = document.createElement("div");
-        elem.id = this.id;
+        let date = new Date(messageObj.time);
+
+        elem.id = `${messageObj.senderId}:${messageObj.time}`;
+        elem.senderId = messageObj.senderId;
+        elem.timeMs = messageObj.time;
+        elem.self = messageObj.sender === USERNAME;
         elem.className = "message";
-        this.self && elem.classList.add("self");
+        elem.self && elem.classList.add("self");
+
+        elem.username = messageObj.sender;
+        elem.messageBody = messageObj.text;
+        elem.time = `${('0' + date.getHours()).slice(-2)}:${('0' + date.getMinutes()).slice(-2)}`;
         return elem;
     }
 
     createSpan(name) {
         let span = document.createElement("span");
         span.className = name;
-        span.innerHTML = this[name];
-        name === "username" && (span.title = this[name]);
+        span.innerHTML = this.box[name];
+        name === "username" && (span.title = this.box[name]);
         return span;
     }
 }

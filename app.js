@@ -29,7 +29,7 @@ io.on('connection', socket => {
         if (users.isUsed(userObj.name)) {
             return socket.emit("can't add user", "Username already used");
         }
-        !(userObj.userId) && (userObj.userId = Date.now().toString(16));
+        !("userId" in userObj) && (userObj.userId = Date.now().toString(16));
         socket.data = userObj;
         users.set(userObj.userId, socket);
         socket.emit("successfully added", userObj);
