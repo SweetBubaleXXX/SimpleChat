@@ -37,6 +37,30 @@ const messageList = {
                 return true;
             }
         });
+
+        this.save();
+    },
+
+    save() {
+        sessionStorage.history = JSON.stringify(this.list);
+    },
+
+    load() {
+        let history = "history" in sessionStorage && JSON.parse(sessionStorage.history);
+        if (history) {
+            messageContainer.innerHTML = '';
+            history.forEach((obj, index, arr) => { //reverse
+                let converted = new MessageNode({
+                    sender: obj.username,
+                    senderId: obj.senderId,
+                    text: obj.messageBody,
+                    time: obj.timeMs
+                });
+                messageContainer.append(converted);
+                arr[index] = converted;
+            });
+            this.list = history;
+        }
     }
 }
 
@@ -172,9 +196,10 @@ socket.on("connect", () => {
 });
 
 socket.on("successfully added", userObj => {
-    sessionStorage = Object.assign(sessionStorage, userObj)
+    sessionStorage = Object.assign(sessionStorage, userObj);
     USERNAME = userObj.name;
     ID = userObj.userId;
+    messageList.load();
     console.log(`Username: ${USERNAME}\nId: ${ID}`);
 });
 
