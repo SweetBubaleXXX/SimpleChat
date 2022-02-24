@@ -19,12 +19,6 @@ const messageList = {
             })()
         });
 
-        // let duplicate = this.list.find(node => node.id === newNode.id);
-        // if (duplicate) {
-        //     messageContainer.removeChild(duplicate);
-        //     this.list = this.list.filter(elem => elem !== duplicate)
-        // }
-
         if (!this.list.length) {
             messageContainer.append(newNode);
             return this.list.push(newNode);
@@ -37,7 +31,6 @@ const messageList = {
                 return true;
             }
         });
-
         this.save();
     },
 
@@ -49,7 +42,7 @@ const messageList = {
         let history = "history" in sessionStorage && JSON.parse(sessionStorage.history);
         if (history) {
             messageContainer.innerHTML = '';
-            history.forEach((obj, index, arr) => { //reverse
+            history.reverse().forEach((obj, index, arr) => {
                 let converted = new MessageNode({
                     sender: obj.username,
                     senderId: obj.senderId,
@@ -59,7 +52,7 @@ const messageList = {
                 messageContainer.append(converted);
                 arr[index] = converted;
             });
-            this.list = history;
+            this.list = history.slice().reverse();
         }
     }
 }
