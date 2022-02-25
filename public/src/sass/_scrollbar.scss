@@ -12,7 +12,7 @@ $scrollbar-hover-color: #888;
     }
 
     &::-webkit-scrollbar-thumb {
-        $border-padding: ($frame-padding - 3px) / 2 rgba(0, 0, 0, 0) solid;
+        $border-padding: calc(($frame-padding - 3px) / 2) rgba(0, 0, 0, 0) solid;
 
         border-radius: 3px;
         border-right: $border-padding;
