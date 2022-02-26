@@ -1,4 +1,4 @@
-import { USERNAME } from "./script";
+import USER from './user';
 
 export default class MessageNode {
     constructor(messageObj) {
@@ -19,7 +19,7 @@ export default class MessageNode {
         elem.id = `${messageObj.senderId}:${messageObj.time}`;
         elem.senderId = messageObj.senderId;
         elem.timeMs = messageObj.time;
-        elem.self = messageObj.sender === USERNAME;
+        elem.self = messageObj.sender === USER.username;
         elem.className = "message";
         elem.self && elem.classList.add("self");
 

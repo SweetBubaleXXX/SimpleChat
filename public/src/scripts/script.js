@@ -1,10 +1,8 @@
-// import { io } from "socket.io-client";
 import { messageStorage, messageContainer } from "./messageStorage";
+import USER from './user';
 
 const socket = io();
 
-let USERNAME;
-let ID;
 const form = document.forms.inputForm;
 let messageInput = form.elements.input;
 
@@ -59,8 +57,8 @@ function sendMessage(e) {
     if (!isEmptyFilled(text)) {
         let date = Date.now();
         let message = {
-            sender: USERNAME,
-            senderId: ID,
+            sender: USER.username,
+            senderId: USER.id,
             text: text,
             time: date
         }
@@ -103,10 +101,10 @@ socket.on("successfully added", userObj => {
     // sessionStorage = Object.assign(sessionStorage, userObj);
     sessionStorage.setItem("name", userObj.name);
     sessionStorage.setItem("userId", userObj.userId);
-    USERNAME = userObj.name;
-    ID = userObj.userId;
+    USER.username = userObj.name;
+    USER.id = userObj.userId;
     messageStorage.load();
-    console.log(`Username: ${USERNAME}\nId: ${ID}`);
+    console.log(`Username: ${USER.username}\nId: ${USER.id}`);
 });
 
 socket.on("can't add user", message => {
@@ -116,4 +114,6 @@ socket.on("can't add user", message => {
 
 socket.on("message", appendMessage);
 
-export { USERNAME };
+socket.on("connect_error", (err) => {
+    console.log(`connect_error due to ${err.message}`);
+  });
