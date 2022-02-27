@@ -1,5 +1,6 @@
-import { messageStorage, messageContainer } from "./messageStorage";
 import USER from './user';
+import { messageStorage, messageContainer } from "./messageStorage";
+import Scroller from './scroller';
 
 const socket = io();
 
@@ -21,13 +22,14 @@ function isEmptyFilled(string) {
     return !string || pattern.test(string);
 }
 
+// Tries to connect by data from sessionStorage, otherwise prompt username
 function reconnectFromStorage() {
-    let username = sessionStorage.name;
-    let id = sessionStorage.userId;
+    let username = sessionStorage.username;
+    let id = sessionStorage.id;
     if (id && username) {
         socket.emit("add user", {
-            userId: id,
-            name: username
+            username: username,
+            id: id
         });
     }
     else {
@@ -35,13 +37,15 @@ function reconnectFromStorage() {
     }
 }
 
+// Gets username and connects
 function connectByUsername() {
     let name = getUsername();
     socket.emit("add user", {
-        name: name
+        username: name
     });
 }
 
+// Promts username while it's empty
 function getUsername() {
     let pickedName;
     while (isEmptyFilled(pickedName)) {
@@ -57,6 +61,7 @@ function sendMessage(e) {
     if (!isEmptyFilled(text)) {
         let date = Date.now();
         let message = {
+            id: `${USER.id}:${date.toString().slice(-9)}`,
             sender: USER.username,
             senderId: USER.id,
             text: text,
@@ -68,25 +73,14 @@ function sendMessage(e) {
     }
 }
 
+// Creates Scroller and appends message to messageStorage
 function appendMessage(message, self = false) {
-    scroll = createScroller(self);
-    messageStorage.new(message);
-    scroll();
+    new Scroller(() => {
+        messageStorage.new(message);
+    }, self);
 }
 
-function createScroller(self) {
-    let scrlTop = Math.ceil(messageContainer.scrollTop);
-    let height = messageContainer.clientHeight;
-    let scrlHeight = messageContainer.scrollHeight;
-    var shouldScroll = self || scrlHeight <= scrlTop + height;
-
-    return function () {
-        if (shouldScroll) {
-            messageContainer.scrollTop = messageContainer.scrollHeight;
-        }
-    }
-}
-
+// Sends message on Ctrl+Enter
 function detectCtrlEnter(e) {
     if (e.ctrlKey && e.code === "Enter") {
         sendMessage(e);
@@ -102,11 +96,9 @@ socket.on("connect_error", err => {
 });
 
 socket.on("successfully added", userObj => {
-    // sessionStorage = Object.assign(sessionStorage, userObj);
-    sessionStorage.setItem("name", userObj.name);
-    sessionStorage.setItem("userId", userObj.userId);
-    USER.username = userObj.name;
-    USER.id = userObj.userId;
+    sessionStorage.setItem("username", userObj.username);
+    sessionStorage.setItem("id", userObj.id);
+    USER.set(userObj);
     messageStorage.load();
     console.log(`Username: ${USER.username}\nId: ${USER.id}`);
 });

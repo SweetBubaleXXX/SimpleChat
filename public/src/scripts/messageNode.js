@@ -1,8 +1,15 @@
 import USER from './user';
 
+/*
+Generates HTML element from message object
+
+message: <Object>
+
+Returns <HTMLDivElement>
+*/
 export default class MessageNode {
-    constructor(messageObj) {
-        this.box = this.createBox(messageObj);
+    constructor(message) {
+        this.box = this.createBox(message);
         if (!this.box.self) {
             this.box.append(this.createSpan("username"));
         }
@@ -12,19 +19,19 @@ export default class MessageNode {
         return this.box;
     }
 
-    createBox(messageObj) {
+    createBox(message) {
         let elem = document.createElement("div");
-        let date = new Date(messageObj.time);
+        let date = new Date(message.time);
+        elem.messageObj = message;
 
-        elem.id = `${messageObj.senderId}:${messageObj.time}`;
-        elem.senderId = messageObj.senderId;
-        elem.timeMs = messageObj.time;
-        elem.self = messageObj.sender === USER.username;
+        elem.id = message.id;
         elem.className = "message";
+
+        elem.self = message.senderId === USER.id;
         elem.self && elem.classList.add("self");
 
-        elem.username = messageObj.sender;
-        elem.messageBody = messageObj.text;
+        elem.username = message.sender;
+        elem.messageBody = message.text;
         elem.time = `${('0' + date.getHours()).slice(-2)}:${('0' + date.getMinutes()).slice(-2)}`;
         return elem;
     }

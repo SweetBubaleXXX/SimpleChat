@@ -112,6 +112,11 @@ html {
     align-self: flex-end;
     color: $background-color;
     background: $primary-color;
+
+    .username,
+    .time {
+        color: $soft-background-color;
+    }
 }
 
 .input-container form {

@@ -7,7 +7,7 @@ const users = new Map();
 
 users.isUsed = function (username) {
     for (let socket of this.values()) {
-        if (username === socket.data?.name) { return true }
+        if (username === socket.data?.username) { return true }
     }
 }
 
@@ -22,21 +22,22 @@ io.on('connection', socket => {
     console.log(`\nUser '${socket.id}' connected`);
 
     socket.on("message", message => {
+        message.time = Date.now();
         io.emit("message", message);
     });
 
     socket.on("add user", userObj => {
-        if (users.isUsed(userObj.name)) {
+        if (users.isUsed(userObj.username)) {
             return socket.emit("can't add user", "Username already used");
         }
-        !("userId" in userObj) && (userObj.userId = Date.now().toString(16));
+        !("id" in userObj) && (userObj.id = Date.now().toString(16).slice(-8)); // If userObj has no id, generate it from current time
         socket.data = userObj;
-        users.set(userObj.userId, socket);
+        users.set(userObj.id, socket);
         socket.emit("successfully added", userObj);
     });
 
     socket.on('disconnect', () => {
-        let id = socket.data?.userId;
+        let id = socket.data?.id;
         if (id) {
             users.delete(id);
         }
