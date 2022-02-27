@@ -97,6 +97,10 @@ socket.on("connect", () => {
     console.log("You're connected");
 });
 
+socket.on("connect_error", err => {
+    console.log(`connect_error due to ${err.message}`);
+});
+
 socket.on("successfully added", userObj => {
     // sessionStorage = Object.assign(sessionStorage, userObj);
     sessionStorage.setItem("name", userObj.name);
@@ -113,7 +117,3 @@ socket.on("can't add user", message => {
 });
 
 socket.on("message", appendMessage);
-
-socket.on("connect_error", (err) => {
-    console.log(`connect_error due to ${err.message}`);
-  });
