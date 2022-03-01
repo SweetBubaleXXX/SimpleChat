@@ -6,6 +6,12 @@
     box-shadow: 0 2px 10px $shadow-color, inset 0 0 4px $shadow-color;
 }
 
+%dotwrap {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
 body,
 html {
     position: relative;
@@ -44,14 +50,42 @@ html {
             bottom: 0;
             left: 0;
             right: 0;
-            padding-top: 0;
+            padding-top: calc($frame-padding / 2);
             border: none;
             border-radius: 0;
         }
     }
 }
 
+.topinfo {
+    display: flex;
+    font-size: 18px;
+
+    & > * {
+        flex: 1 0;
+    }
+
+    #top-username {
+        flex: 2 0;
+        text-align: center;
+        @extend %dotwrap;
+    }
+
+    .user-count-container {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+    }
+
+    #user-icon {
+        width: 1.2em;
+        height: 1.2em;
+        margin: 0 3px;
+    }
+}
+
 .message-container {
+    flex-grow: 1;
     display: flex;
     flex-direction: column;
     position: relative;
@@ -92,10 +126,8 @@ html {
         height: $spacing-vert - $abs-padding;
         font-size: $spacing-vert - 2 * $abs-padding;
         font-weight: 400;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
         color: $soft-primary-color;
+        @extend %dotwrap;
     }
 
     .username {

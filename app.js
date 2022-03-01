@@ -8,7 +8,7 @@ const users = new Map();
 
 users.isUsed = function (username) {
     for (let socket of this.values()) {
-        if (username === socket.data?.username) { return true }
+        if (username.toLowerCase() === socket.data?.username.toLowerCase()) { return true }
     }
 }
 
@@ -35,12 +35,14 @@ io.on('connection', socket => {
         socket.data = userObj;
         users.set(userObj.id, socket);
         socket.emit("successfully added", userObj);
+        io.emit("new user", users.size);
     });
 
     socket.on('disconnect', () => {
         let id = socket.data?.id;
         if (id) {
             users.delete(id);
+            io.emit("new user", users.size);
         }
     });
 });

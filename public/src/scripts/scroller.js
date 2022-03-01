@@ -24,4 +24,13 @@ export default class Scroller {
     static scroll() {
         messageContainer.scrollTop = messageContainer.scrollHeight;
     }
+
+    static ifNotFirstPage(elem) {
+        return elem.scrollHeight - elem.scrollTop > 2 * elem.clientHeight;
+    }
+
+    // Returns current scroll position [0, 1]
+    // static getScrollPos(elem) {
+    //     return elem.scrollTop / (elem.scrlHeight - elem.clientHeight);
+    // }
 }

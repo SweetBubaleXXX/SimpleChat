@@ -1,6 +1,7 @@
 import USER from './user';
 import { messageStorage, messageContainer } from "./messageStorage";
 import Scroller from './scroller';
+import debounce from './debounce.js';
 
 const socket = io();
 
@@ -10,12 +11,33 @@ let messageInput = form.elements.input;
 form.addEventListener("submit", sendMessage);
 messageInput.onkeyup = detectCtrlEnter;
 
+messageContainer.onscroll = debounce(e => {
+    showToBottom(e);
+}, 100);
+
 document.addEventListener("DOMContentLoaded", () => {
     reconnectFromStorage();
 });
 
 document.documentElement.setAttribute('class',
     'ontouchend' in document ? 'touch' : 'no-touch');
+
+function showToBottom(e) {
+    let elem = e.target;
+    if (Scroller.ifNotFirstPage(elem)) {
+        elem.classList.add("to-bottom");
+    }
+    else {
+        elem.classList.remove("to-bottom");
+    }
+}
+
+// Sends message on Ctrl+Enter
+function detectCtrlEnter(e) {
+    if (e.ctrlKey && e.code === "Enter") {
+        sendMessage(e);
+    }
+}
 
 function isEmptyFilled(string) {
     let pattern = /^\s*$/;
@@ -78,13 +100,7 @@ function appendMessage(message, self = false) {
     new Scroller(() => {
         messageStorage.new(message);
     }, self);
-}
-
-// Sends message on Ctrl+Enter
-function detectCtrlEnter(e) {
-    if (e.ctrlKey && e.code === "Enter") {
-        sendMessage(e);
-    }
+    console.log(messageContainer.scrollTop);
 }
 
 socket.on("connect", () => {
@@ -106,6 +122,10 @@ socket.on("successfully added", userObj => {
 socket.on("can't add user", message => {
     message && alert(message);
     connectByUsername();
+});
+
+socket.on("new user", amount => {
+    document.getElementById("user-count").innerHTML = amount;
 });
 
 socket.on("message", appendMessage);
