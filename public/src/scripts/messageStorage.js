@@ -49,6 +49,7 @@ const messageStorage = {
             });
             this.list = history.slice().reverse(); // assign reversed copy
             Scroller.scroll();
+            messageContainer.classList.add("smooth-scroll");
         }
     }
 };

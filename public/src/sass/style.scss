@@ -12,6 +12,10 @@
     text-overflow: ellipsis;
 }
 
+.smooth-scroll {
+    scroll-behavior: smooth;
+}
+
 body,
 html {
     position: relative;
@@ -37,6 +41,25 @@ html {
     border-radius: 15px;
     border: 2px $primary-color solid;
     @extend %block-shadow;
+
+    #to-bottom-icon {
+        display: block;
+        opacity: 0;
+        position: absolute;
+        right: 2 * $frame-padding;
+        bottom: 2 * $input-container-height;
+        width: 2 * $message-font-size;
+        height: 2 * $message-font-size;
+        border-radius: 50%;
+        background: #eeeeee99;
+        box-shadow: 0 0 4px $shadow-color;
+        cursor: pointer;
+        transition: $opacity-transition;
+    }
+
+    &.to-bottom #to-bottom-icon {
+        opacity: 1;
+    }
 
     @media screen {
         @media (max-height: 650px), (max-width: 900px) {
@@ -152,7 +175,6 @@ html {
 }
 
 .input-container form {
-    $row-height: 36px;
     $border-radius: 7px;
 
     display: flex;
@@ -173,8 +195,8 @@ html {
 
     .send-button {
         display: block;
-        width: $row-height;
-        height: $row-height;
+        width: $input-container-height;
+        height: $input-container-height;
         padding: 1px;
         margin-left: 10px;
         border-radius: $border-radius;

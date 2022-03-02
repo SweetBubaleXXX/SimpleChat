@@ -1,15 +1,17 @@
 import USER from './user';
 import { messageStorage, messageContainer } from "./messageStorage";
 import Scroller from './scroller';
-import debounce from './debounce.js';
+import debounce from './debounce';
 
 const socket = io();
 
 const form = document.forms.inputForm;
 let messageInput = form.elements.input;
+let toBottomButton = document.getElementById("to-bottom-icon");
 
 form.addEventListener("submit", sendMessage);
 messageInput.onkeyup = detectCtrlEnter;
+toBottomButton.onclick = Scroller.scroll;
 
 messageContainer.onscroll = debounce(e => {
     showToBottom(e);
@@ -24,11 +26,12 @@ document.documentElement.setAttribute('class',
 
 function showToBottom(e) {
     let elem = e.target;
+    let frame = document.querySelector(".frame");
     if (Scroller.ifNotFirstPage(elem)) {
-        elem.classList.add("to-bottom");
+        frame.classList.add("to-bottom");
     }
     else {
-        elem.classList.remove("to-bottom");
+        frame.classList.remove("to-bottom");
     }
 }
 
