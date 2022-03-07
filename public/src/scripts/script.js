@@ -103,7 +103,6 @@ function appendMessage(message, self = false) {
     new Scroller(() => {
         messageStorage.new(message);
     }, self);
-    console.log(messageContainer.scrollTop);
 }
 
 socket.on("connect", () => {

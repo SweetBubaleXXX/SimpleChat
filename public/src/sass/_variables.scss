@@ -13,4 +13,4 @@ $message-margin: 10px 0;
 $frame-padding: 10px;
 $input-container-height: 36px;
 
-$opacity-transition: opacity ease-in .1s;
+$opacity-transition: visibility .1s linear .1s, opacity ease-in .1s;
